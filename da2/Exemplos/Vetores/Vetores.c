@@ -73,6 +73,7 @@ int main()
     printf("*(&vet): %p\n", *(&vet)); // resolver o endereco de uma variavel eh igual a ela mesma! *(&vet) = vet
     printf("==>(&vet)+1: %p\n", (&vet)+1); // ACREDITO QUE O MESMO NAO SE REPITA PARA UM VETOR ALOCADO DINAMICAMENTE, POIS &V tambem tera endereco, ou seja &V sera diferente de V (TESTAR!) TESTADO****
 
+    printf("sizeof(v)%ld\n", sizeof(v));
     printf("sizeof(int)%ld\n", sizeof(int));
     printf("sizeof(int*)%ld\n", sizeof(int*)); // no CS50 uma palavra tem 64 bits ****
     return 0;
