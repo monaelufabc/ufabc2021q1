@@ -26,10 +26,10 @@ int main(int argc, char** argv)
         printf("%d\n", m);
         for(j=0; j<m; j++)
         {
-            printf("%d%s", rand()%10, (j<m-1?" ":"\n"));
+            printf("%d%s", rand()%11, (j<m-1?" ":"\n"));
         }
     }
-    printf("%d\n", rand()%10);
+    printf("%d\n", rand()%11);
 
     return 0;
 }
