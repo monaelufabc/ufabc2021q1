@@ -34,7 +34,7 @@ int main()
 
     for(i=0; i<n; i++)
     {
-        if(calculaMediaInteira(turma[i].notas, turma[i].qtNotas) == media)
+        if(calculaMediaInteira(turma[i].notas, turma[i].qtNotas) >= media)
         {
             printf("[%s] %s\n", turma[i].matricula, turma[i].nome);
         }
