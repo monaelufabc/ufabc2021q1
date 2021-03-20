@@ -37,7 +37,7 @@ int main()
         else if(op == 'R')
         {
             scanf("%d", &chave);
-            removerLista(&lista, criaItem(chave));
+            printf("Item %d%sfoi removido da lista\n", chave, removerLista(&lista, criaItem(chave))!=-1?" ":" nao ");
         }
         else if(op == 'B')
         {
@@ -145,6 +145,7 @@ int removerLista(struct Lista *l, struct Item rem)
         }
         l->quantidade--;
     }
+    return i;
 }
 
 
