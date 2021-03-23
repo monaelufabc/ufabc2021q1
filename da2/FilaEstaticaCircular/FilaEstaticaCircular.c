@@ -105,9 +105,9 @@ void mostrarFilaCircular(struct FilaEstaticaCircular f)
     int i;
     if(!filaCircularVazia(f))
     {
-        for(i=f.inicio; i!=f.fim; (i+1)%f.tamanho)
+        for(i=f.inicio; i!=f.fim; i=(i+1)%f.tamanho)
         {
-            printf("%d%s", f.itens[i].chave, " ");
+            printf("%d%s", f.itens[i].chave, (i+1)%f.tamanho!=f.fim?" ":"\n");
         }
     }
 }
