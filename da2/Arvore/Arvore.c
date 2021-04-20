@@ -21,24 +21,25 @@ void preOrder(struct No *);
 void inOrder(struct No *);
 void postOrder(struct No *);
 struct No * remover(struct Arvore *, int);
+struct No * sucessor(struct No *);
 
 int main()
 {
     struct Arvore *arvore = criaArvore();
     struct No *no;
-    int chave;
+    int chave, ret;
     char op;
 
     while(scanf("\n%c", &op) != EOF)
     {
         if(op == 'I')
         {
-            scanf("%d", &chave);
+            ret = scanf("%d", &chave);
             inserir(arvore, criaNo(chave));
         }
         else if(op == 'R')
         {
-            scanf("%d", &chave);
+            ret = scanf("%d", &chave);
             no = remover(arvore, chave);
             if(no != NULL)
             {
@@ -48,7 +49,7 @@ int main()
         }
         else // M
         {
-            scanf("\n%c", &op);
+            ret = scanf("\n%c", &op);
             if(op == 'P')
             {
                 preOrder(arvore->raiz);
@@ -158,7 +159,7 @@ void inOrder(struct No *r)
 
 struct No * remover(struct Arvore *t, int chave)
 {
-    struct No *anterior = NULL, *filho = t->raiz;
+    struct No *anterior = NULL, *filho = t->raiz, *subs;
 
     while(filho != NULL && filho->chave != chave)
     {
@@ -195,7 +196,34 @@ struct No * remover(struct Arvore *t, int chave)
         }
         else if(filho->esquerda != NULL && filho->direita != NULL) // pai de dois filhos
         {
+            subs = sucessor(filho->direita);
 
+            if(anterior != NULL) // nao eh raiz
+            {
+                if(anterior->esquerda == filho) // eh filho esquerdo do seu pai
+                {
+                    anterior->esquerda = subs;
+                }
+                else // eh filho direito do seu pai
+                {
+                    anterior->direita = subs;
+                }
+            }
+            else // eh raiz
+            {
+                t->raiz = subs;
+            }
+            subs->pai = anterior; // sucessor/antecessor assume pai de filho como seu pai
+            subs->esquerda = filho->esquerda; // sucessor/antecessor assume subarvore da esquerda de filho, se houver
+            if(filho->esquerda != NULL) // se houver subarvore esquerda de filho, entao
+            {
+                filho->esquerda->pai = subs; //raiz da subarvore esquerda de filho assume antecessor/sucessor como pai
+            }
+            subs->direita = filho->direita;
+            if(filho->direita != NULL)
+            {
+                filho->direita->pai = subs;
+            }
         }
         else // pai de filho unico
         {
@@ -234,9 +262,38 @@ struct No * remover(struct Arvore *t, int chave)
                 {
                     t->raiz = filho->direita;
                 }
-                /*AVISO*/
+                t->raiz->pai = NULL;
             }
         }
     }
     return filho;
+}
+
+struct No * sucessor(struct No *filho)
+{
+    struct No *anterior = NULL;
+
+    while(filho != NULL)
+    {
+        anterior = filho;
+        filho = filho->esquerda;
+    }
+
+    if(anterior->pai->esquerda == anterior) // sucessor eh filho esquerdo do seu pai
+    {
+        anterior->pai->esquerda = anterior->direita; // avo assume o neto da direita do sucessor, se houver
+        if(anterior->direita != NULL)
+        {
+            anterior->direita->pai = anterior->pai;
+        }
+    }
+    else // sucessor eh filho direito do seu pai
+    {
+        anterior->pai->direita = anterior->direita;
+        if(anterior->direita != NULL)
+        {
+            anterior->direita->pai = anterior->pai;
+        }
+    }
+    return anterior;
 }

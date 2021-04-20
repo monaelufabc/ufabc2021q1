@@ -21,6 +21,7 @@ void preOrder(struct No *);
 void inOrder(struct No *);
 void postOrder(struct No *);
 struct No * remover(struct Arvore *, int);
+struct No * sucessor(struct No *);
 
 int main()
 {
@@ -158,7 +159,7 @@ void inOrder(struct No *r)
 
 struct No * remover(struct Arvore *t, int chave)
 {
-    struct No *anterior = NULL, *filho = t->raiz;
+    struct No *anterior = NULL, *filho = t->raiz, *subs;
 
     while(filho != NULL && filho->chave != chave)
     {
@@ -195,7 +196,36 @@ struct No * remover(struct Arvore *t, int chave)
         }
         else if(filho->esquerda != NULL && filho->direita != NULL) // eh pai de dois filhos
         {
+            subs = sucessor(filho->direita);
 
+            if(anterior != NULL) // nao eh raiz
+            {
+                if(anterior->esquerda == filho) // filho eh filho da esquerda de seu pai (anterior)
+                {
+                    anterior->esquerda = subs;
+                }
+                else // filho eh filho da direita de seu pai (anterior)
+                {
+                    anterior->direita = subs;
+                }
+            }
+            else // eh raiz
+            {
+                t->raiz = subs;
+            }
+            subs->pai = anterior;
+
+            subs->esquerda = filho->esquerda;
+            if(filho->esquerda != NULL)
+            {
+                filho->esquerda->pai = subs;
+            }
+
+            subs->direita = filho->direita;
+            if(filho->direita != NULL)
+            {
+                filho->direita->pai = subs;
+            }
         }
         else // pai de filho unico
         {
@@ -243,4 +273,29 @@ struct No * remover(struct Arvore *t, int chave)
         }
     }
     return filho;
+}
+
+struct No * sucessor(struct No *filho)
+{
+    struct No * anterior = NULL;
+
+    while(filho != NULL)
+    {
+        anterior = filho;
+        filho = filho->esquerda;
+    }
+
+    if(anterior->pai->esquerda == anterior) // anterior (sucessor) eh filho esquerdo de seu pai
+    {
+        anterior->pai->esquerda = anterior->direita;
+    }
+    else // anterior (sucessor) eh filho direito de seu pai
+    {
+        anterior->pai->direita = anterior->direita;
+    }
+    if(anterior->direita != NULL)
+    {
+        anterior->direita->pai = anterior->pai;
+    }
+    return anterior;
 }
